@@ -22,6 +22,7 @@ touch /tmp/zook-start-wait
 
 # launch the server. strace so we can see SEGVs.
 strace -f -e none -o "$STRACELOG" ./clean-env.sh ./$1 8080 &
+STRACEPID=$!
 need_cleanup=1
 
 # wait until we can connect
@@ -36,12 +37,11 @@ $2 $HOST $PORT >/dev/null &
 ATTACKPID=$!
 
 # wait for the server to crash.
-tail -f -n +0 "$STRACELOG" | grep -q SIGSEGV &
+tail --pid=$STRACEPID -f -n +0 "$STRACELOG" | grep -q SIGSEGV &
 GREPPID=$!
-TAILPID=$(jobs -x echo %1)
 
 # give it 5 seconds to crash.
-( sleep 5; kill $TAILPID 2>/dev/null ) &
+( sleep 5; kill $STRACEPID 2>/dev/null ) &
 
 # see whether we got a crash.
 wait $GREPPID
