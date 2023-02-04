@@ -41,10 +41,10 @@ tail --pid=$STRACEPID -f -n +0 "$STRACELOG" | grep -q SIGSEGV &
 GREPPID=$!
 
 # give it 5 seconds to crash.
-( sleep 5; kill $STRACEPID 2>/dev/null ) &
+( sleep 5; kill -9 $STRACEPID 2>/dev/null ) &
 
 # see whether we got a crash.
-wait $GREPPID
+wait $GREPPID 2>/dev/null
 OK=$?
 
 kill $ATTACKPID 2>/dev/null
