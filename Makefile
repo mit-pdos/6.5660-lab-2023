@@ -94,7 +94,7 @@ clean:
 	rm -f *.o *.pyc *.bin $(PROGS)
 
 handin.tar.gz: clean
-	tar cf - `find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v 'handin\.tar\.gz' | gzip > $@
+	tar cf - `find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v 'handin\.tar\.gz'` | gzip > $@
 
 .PHONY: typecheck
 typecheck: $(wildcard *.py zoobar/*.py)
