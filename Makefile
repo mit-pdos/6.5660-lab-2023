@@ -96,9 +96,16 @@ clean:
 handin.tar.gz: clean
 	tar cf - `find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v 'handin\.tar\.gz' | grep -v 'handin\.zip'` | gzip > $@
 
-handin.zip: clean
+# Workaround for the VM not having zip installed (will be fixed next year)
+zip:
+	rm -f $@.tmp
+	wget https://web.mit.edu/6.858/2023/zip -O $@.tmp
+	chmod 755 $@.tmp
+	mv $@.tmp $@
+
+handin.zip: clean zip
 	-rm -f $@
-	find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v 'handin\.tar\.gz' | grep -v 'handin\.zip' | zip -r@ $@
+	find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v 'handin\.tar\.gz' | grep -v 'handin\.zip' | ./zip -r@ $@
 
 .PHONY: typecheck
 typecheck: $(wildcard *.py zoobar/*.py)
