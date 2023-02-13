@@ -94,7 +94,7 @@ clean:
 	rm -f *.o *.pyc *.bin $(PROGS)
 
 handin.tar.gz: clean
-	tar cf - `find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v 'handin\.tar\.gz' | grep -v 'handin\.zip'` | gzip > $@
+	tar cf - `find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v 'handin\.tar\.gz' | grep -v 'zip$$'` | gzip > $@
 
 # Workaround for the VM not having zip installed (will be fixed next year)
 zip:
@@ -105,7 +105,7 @@ zip:
 
 handin.zip: clean zip
 	-rm -f $@
-	find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v 'handin\.tar\.gz' | grep -v 'handin\.zip' | ./zip -r@ $@
+	find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v 'handin\.tar\.gz' | grep -v 'zip$$' | ./zip -r@ $@
 
 .PHONY: typecheck
 typecheck: $(wildcard *.py zoobar/*.py)
