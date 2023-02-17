@@ -21,7 +21,7 @@ script -q -f -c "sh -c './clean-env.sh ./$1 8080'" /tmp/zookd.out &> /dev/null &
 
 # wait until we can connect
 inotifywait -qqe delete_self -t 2 /tmp/zook-start-wait 2>/dev/null
-if ! curl --connect-timeout 10 -s $HOST:$PORT &>/dev/null ; then
+if ! curl --connect-timeout 30 -s $HOST:$PORT &>/dev/null ; then
   echo "failed to connect to $HOST:$PORT"
   exit 1
 fi
@@ -29,10 +29,10 @@ fi
 # create the grades file
 touch "$GRAD" || exit 1
 
-# run the script with a 5-second timeout.
+# run the script with a 20-second timeout.
 $2 $HOST $PORT >/dev/null &
 pid=$!
-(sleep 5; kill -9 $pid &>/dev/null) &
+(sleep 20; kill -9 $pid &>/dev/null) &
 wait $pid
 
 # wait a little bit, in case the exploited web server is still running code

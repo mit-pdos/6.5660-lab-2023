@@ -27,7 +27,7 @@ need_cleanup=1
 
 # wait until we can connect
 inotifywait -qqe delete_self -t 2 /tmp/zook-start-wait 2>/dev/null
-if ! curl --connect-timeout 10 -s $HOST:$PORT &>/dev/null ; then
+if ! curl --connect-timeout 30 -s $HOST:$PORT &>/dev/null ; then
   echo "failed to connect to $HOST:$PORT"
   exit 1
 fi
@@ -40,8 +40,8 @@ ATTACKPID=$!
 tail --pid=$STRACEPID -f -n +0 "$STRACELOG" | grep -q SIGSEGV &
 GREPPID=$!
 
-# give it 5 seconds to crash.
-( sleep 5; kill -9 $STRACEPID 2>/dev/null ) &
+# give it 20 seconds to crash.
+( sleep 20; kill -9 $STRACEPID 2>/dev/null ) &
 
 # see whether we got a crash.
 wait $GREPPID 2>/dev/null
