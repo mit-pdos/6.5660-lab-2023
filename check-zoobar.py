@@ -57,7 +57,7 @@ def setup() -> None:
     subprocess.Popen(["./zookd", "8080"], stdout=zookd_out, stderr=zookd_out)
     
     atexit.register(killall)
-    sh("inotifywait -qqe delete_self -t 5 /tmp/zook-start-wait 2>/dev/null", False)
+    sh("inotifywait -qqe delete_self -t 20 /tmp/zook-start-wait 2>/dev/null", False)
 
 import z_client
 def check_ex0() -> None:
