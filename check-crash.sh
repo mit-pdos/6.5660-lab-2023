@@ -26,7 +26,7 @@ STRACEPID=$!
 need_cleanup=1
 
 # wait until we can connect
-inotifywait -qqe delete_self -t 2 /tmp/zook-start-wait 2>/dev/null
+inotifywait -qqe delete_self -t 20 /tmp/zook-start-wait 2>/dev/null
 if ! curl --connect-timeout 30 -s $HOST:$PORT &>/dev/null ; then
   echo "failed to connect to $HOST:$PORT"
   exit 1
