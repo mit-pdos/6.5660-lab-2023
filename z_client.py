@@ -65,8 +65,10 @@ def post(url: str, cookies: str, postdata: str) -> bytes:
     return run_wget([url, "--load-cookies", "/tmp/cookies.txt", "--post-data", postdata])
 
 # sender must already be logged in
-def transfer(sender_cookies: str, recipient: str, zoobars: int) -> bytes:
+def transfer(sender_cookies: str, recipient: str, zoobars: int, delay: int = 0) -> bytes:
     p = "recipient=%s&zoobars=%s&submission=Send" % (recipient, str(zoobars))
+    if delay > 0:
+        p = p + ("&delay=%d" % delay)
     return post("http://%s:8080/zoobar/index.cgi/transfer" % serverip,
                 sender_cookies, p)
 

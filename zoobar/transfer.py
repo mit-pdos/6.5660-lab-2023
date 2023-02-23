@@ -5,10 +5,16 @@ from zoodb import *
 from debug import *
 import bank
 import traceback
+import time
 
 @catch_err
 @requirelogin
 def transfer():
+    # This helps with grading lab 2 exercise 8; you must keep
+    # this code at the beginning of the transfer method.
+    if 'delay' in request.form:
+        time.sleep(int(request.form['delay']))
+
     warning = None
     try:
         if 'recipient' in request.form:
