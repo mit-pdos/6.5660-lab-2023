@@ -54,7 +54,7 @@ class FifoServer(object):
     def __enter__(self):
         self.pid = os.fork()
         if self.pid == 0:
-            server.run_fifo(self.fifo_pn)
+            self.server.run_fifo(self.fifo_pn)
             os._exit(0)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
