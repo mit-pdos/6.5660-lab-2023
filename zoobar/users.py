@@ -3,7 +3,6 @@ from flask import g, render_template, request, Markup
 from login import requirelogin
 from zoodb import *
 from debug import *
-from profile import *
 import bank
 
 @catch_err
@@ -17,7 +16,8 @@ def users():
         if user: 
             p = user.profile
             if p.startswith("#!python"):
-                p = run_profile(user)
+                import profile
+                p = profile.run_profile(user)
 
             p_markup = Markup("<b>%s</b>" % p)
             args['profile'] = p_markup
