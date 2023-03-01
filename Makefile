@@ -2,11 +2,15 @@ ASFLAGS   := -m64
 CFLAGS    := -m64 -g -std=c99 -Wall -Wno-format-overflow -D_GNU_SOURCE -static
 LDFLAGS   := -m64
 LDLIBS    := 
-PROGS     := zookd zookd-exstack zookd-nxstack zookd-withssp shellcode.bin run-shellcode
+PROGS     := zookd zookd-exstack zookd-nxstack zookd-withssp
+ifneq (,$(wildcard run-shellcode.c))
+PROGS     += run-shellcode
+endif
 ifneq (,$(wildcard zookfs.c zookd2.c))
 PROGS     += zookfs zookd2
 endif
 SHELLCODE := $(patsubst %.S,%.bin,$(wildcard shellcode*.S))
+PROGS     += $(SHELLCODE)
 
 all: $(PROGS)
 .PHONY: all

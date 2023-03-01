@@ -19,6 +19,7 @@ def run_wget(opts: List[str] = []) -> bytes:
     args = list(opts)
     args.insert(0, "wget")
     args.extend(["-O", "-"])
+    args.extend(["--timeout=30"])
     p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if p.wait() != 0:
         raise Exception("wget failed: %s" % p.stderr.read().decode('utf-8', 'ignore')) # type: ignore
