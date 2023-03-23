@@ -256,16 +256,6 @@ void split_path(char *pn)
     setenv("SCRIPT_FILENAME", pn, 1);
 }
 
-static int cgi_uid = -1;
-static int cgi_gid = -1;
-
-void
-http_set_executable_uid_gid(int uid, int gid)
-{
-    cgi_uid = uid;
-    cgi_gid = gid;
-}
-
 static int
 valid_cgi_script(struct stat *st)
 {
@@ -274,11 +264,6 @@ valid_cgi_script(struct stat *st)
 
     if (!(st->st_mode & S_IXUSR))
         return 0;
-
-    if (cgi_uid >= 0 && cgi_gid >= 0) {
-        if (st->st_uid != cgi_uid || st->st_gid != cgi_gid)
-            return 0;
-    }
 
     return 1;
 }
@@ -513,50 +498,4 @@ void fdprintf(int fd, char *fmt, ...)
 
     write(fd, s, strlen(s));
     free(s);
-}
-
-ssize_t sendfd(int socket, const void *buffer, size_t length, int fd)
-{
-    struct iovec iov = {(void *)buffer, length};
-    char buf[CMSG_LEN(sizeof(int))];
-    struct cmsghdr *cmsg = (struct cmsghdr *)buf;
-    ssize_t r;
-    cmsg->cmsg_len = sizeof(buf);
-    cmsg->cmsg_level = SOL_SOCKET;
-    cmsg->cmsg_type = SCM_RIGHTS;
-    *((int *)CMSG_DATA(cmsg)) = fd;
-    struct msghdr msg = {0};
-    msg.msg_iov = &iov;
-    msg.msg_iovlen = 1;
-    msg.msg_control = cmsg;
-    msg.msg_controllen = cmsg->cmsg_len;
-    r = sendmsg(socket, &msg, 0);
-    if (r < 0)
-        warn("sendmsg");
-    return r;
-}
-
-ssize_t recvfd(int socket, void *buffer, size_t length, int *fd)
-{
-    struct iovec iov = {buffer, length};
-    char buf[CMSG_LEN(sizeof(int))];
-    struct cmsghdr *cmsg = (struct cmsghdr *)buf;
-    ssize_t r;
-    cmsg->cmsg_len = sizeof(buf);
-    cmsg->cmsg_level = SOL_SOCKET;
-    cmsg->cmsg_type = SCM_RIGHTS;
-    struct msghdr msg = {0};
-    msg.msg_iov = &iov;
-    msg.msg_iovlen = 1;
-    msg.msg_control = cmsg;
-    msg.msg_controllen = cmsg->cmsg_len;
-again:
-    r = recvmsg(socket, &msg, 0);
-    if (r < 0 && errno == EINTR)
-        goto again;
-    if (r < 0)
-        warn("recvmsg");
-    else
-        *fd = *((int*)CMSG_DATA(cmsg));
-    return r;
 }
