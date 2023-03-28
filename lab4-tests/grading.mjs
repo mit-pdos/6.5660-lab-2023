@@ -1,5 +1,6 @@
-import * as puppeteer from "puppeteer"
+import * as puppeteer from "puppeteer";
 import * as npmfs from "fs";
+import fetch from "node-fetch";
 
 export var phantom = await (async () => {
   const browser = await puppeteer.launch(

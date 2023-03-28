@@ -89,8 +89,12 @@ check-lab3:
 	./check-lab3.py
 
 .PHONY: check-lab4
-check-lab4: $(PROGS)
+check-lab4: $(PROGS) /lib/x86_64-linux-gnu/libgbm.so.1
 	./check-lab4.sh
+
+/lib/x86_64-linux-gnu/libgbm.so.1:
+	sudo apt-get update
+	sudo apt-get install -y libgbm-dev
 
 .PHONY: clean
 clean:

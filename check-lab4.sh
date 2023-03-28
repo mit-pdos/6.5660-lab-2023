@@ -48,6 +48,7 @@ cleanup
 trap cleanup EXIT
 
 ## if this is the first time we're using puppeteer..
+npm install node-fetch
 npm link puppeteer
 
 echo "Generating reference images..."
