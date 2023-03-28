@@ -21,3 +21,6 @@ __pycache__
 /.well-known/acme-challenge
 /export
 /zip
+/.gdb_history
+/package.json
+/package-lock.json
