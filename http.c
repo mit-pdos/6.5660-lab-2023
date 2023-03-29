@@ -200,7 +200,6 @@ void http_err(int fd, int code, char *fmt, ...)
 
     fdprintf(fd, "%s\n", msg);
 
-    close(fd);
     warnx("[%d] Request failed: %s", getpid(), msg);
     free(msg);
 }

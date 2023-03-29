@@ -58,16 +58,28 @@ static int start_server(const char *portstr)
     return sockfd;
 }
 
+static void sigchld(int sig, siginfo_t *si, void *context)
+{
+    if (si->si_signo == SIGCHLD && WIFSIGNALED(si->si_status)) {
+        printf("Child process %d terminated incorrectly, receiving signal %d\n",
+               si->si_pid, WTERMSIG(si->si_status));
+    }
+}
+
 static int run_server(const char *port)
 {
     signal(SIGPIPE, SIG_IGN);
-    signal(SIGCHLD, SIG_IGN);
+
+    struct sigaction sigchld_sa;
+    memset(&sigchld_sa, 0, sizeof(sigchld_sa));
+    sigchld_sa.sa_flags = SA_SIGINFO | SA_RESTART;
+    sigchld_sa.sa_sigaction = sigchld;
+    sigaction(SIGCHLD, &sigchld_sa, NULL);
 
     int sockfd = start_server(port);
     for (;;) {
         int cltfd = accept(sockfd, NULL, NULL);
         int pid;
-        int status;
 
         if (cltfd < 0)
             err(1, "accept");
@@ -90,11 +102,6 @@ static int run_server(const char *port)
 
         default:
             close(cltfd);
-            pid = wait(&status);
-            if (WIFSIGNALED(status)) {
-                printf("Child process %d terminated incorrectly, receiving signal %d\n",
-                       pid, WTERMSIG(status));
-            }
             break;
         }
     }
