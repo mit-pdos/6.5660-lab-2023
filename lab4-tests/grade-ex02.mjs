@@ -44,7 +44,7 @@ async function main(studentDir) {
                 if (await grading.check_log(await grading.getCookie("localhost", "PyZoobarLogin"))) {
                     grading.passed("Found cookie in log");
                 } else {
-                    grading.passed("No cookie in log");
+                    grading.failed("No cookie in log");
                 }
 
                 phantom.exit();

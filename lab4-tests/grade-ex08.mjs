@@ -38,6 +38,8 @@ async function testLoggedOut(answerPath, graderPassword) {
             console.log("Entering grader/" + graderPassword + " into form.");
 
             await submitLoginFromClick(page, "grader", graderPassword, async function() {
+                grading.passed("OK");
+
                 await page.close();
                 phantom.exit();
             });
