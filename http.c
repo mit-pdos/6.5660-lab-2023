@@ -433,7 +433,6 @@ void http_serve_executable(int fd, const char *pn)
             write(fd, buf, ret);
         }
 
-        close(fd);
         close(pipefd[0]);
     }
 }

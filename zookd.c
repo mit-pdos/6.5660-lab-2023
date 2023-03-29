@@ -60,6 +60,9 @@ static int start_server(const char *portstr)
 
 static int run_server(const char *port)
 {
+    signal(SIGPIPE, SIG_IGN);
+    signal(SIGCHLD, SIG_IGN);
+
     int sockfd = start_server(port);
     for (;;) {
         int cltfd = accept(sockfd, NULL, NULL);
