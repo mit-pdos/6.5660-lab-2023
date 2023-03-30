@@ -35,5 +35,17 @@ def disable_xss_protection(response):
     response.headers.add("X-XSS-Protection", "0")
     return response
 
+class HTTPSFix:
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        host = environ.get('HTTP_HOST')
+        if host is not None and host.endswith('443'):
+            environ['wsgi.url_scheme'] = 'https'
+        return self.app(environ, start_response)
+
+app = HTTPSFix(app)
+
 if __name__ == "__main__":
     app.run()

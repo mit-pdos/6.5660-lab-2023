@@ -19,6 +19,7 @@ def run_wget(opts: List[str] = []) -> bytes:
     args = list(opts)
     args.insert(0, "wget")
     args.extend(["-O", "-"])
+    args.extend(["--timeout=30"])
     p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if p.wait() != 0:
         raise Exception("wget failed: %s" % p.stderr.read().decode('utf-8', 'ignore')) # type: ignore
@@ -65,8 +66,10 @@ def post(url: str, cookies: str, postdata: str) -> bytes:
     return run_wget([url, "--load-cookies", "/tmp/cookies.txt", "--post-data", postdata])
 
 # sender must already be logged in
-def transfer(sender_cookies: str, recipient: str, zoobars: int) -> bytes:
+def transfer(sender_cookies: str, recipient: str, zoobars: int, delay: int = 0) -> bytes:
     p = "recipient=%s&zoobars=%s&submission=Send" % (recipient, str(zoobars))
+    if delay > 0:
+        p = p + ("&delay=%d" % delay)
     return post("http://%s:8080/zoobar/index.cgi/transfer" % serverip,
                 sender_cookies, p)
 

@@ -14,8 +14,13 @@
 /run-shellcode
 /zoobar/db
 /handin.tar.gz
+/handin.zip
 __pycache__
 /node_modules
 /lab4-tests/*.png
 /.well-known/acme-challenge
 /export
+/zip
+/.gdb_history
+/package.json
+/package-lock.json

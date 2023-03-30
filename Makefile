@@ -2,11 +2,15 @@ ASFLAGS   := -m64
 CFLAGS    := -m64 -g -std=c99 -Wall -Wno-format-overflow -D_GNU_SOURCE -static
 LDFLAGS   := -m64
 LDLIBS    := 
-PROGS     := zookd zookd-exstack zookd-nxstack zookd-withssp shellcode.bin run-shellcode
+PROGS     := zookd zookd-exstack zookd-nxstack zookd-withssp
+ifneq (,$(wildcard run-shellcode.c))
+PROGS     += run-shellcode
+endif
 ifneq (,$(wildcard zookfs.c zookd2.c))
 PROGS     += zookfs zookd2
 endif
 SHELLCODE := $(patsubst %.S,%.bin,$(wildcard shellcode*.S))
+PROGS     += $(SHELLCODE)
 
 all: $(PROGS)
 .PHONY: all
@@ -85,8 +89,20 @@ check-lab3:
 	./check-lab3.py
 
 .PHONY: check-lab4
-check-lab4: $(PROGS)
+check-lab4: $(PROGS) /lib/x86_64-linux-gnu/libgbm.so.1
 	./check-lab4.sh
+
+/lib/x86_64-linux-gnu/libgbm.so.1:
+	sudo apt-get update
+	sudo apt-get install -y libgbm-dev
+
+.PHONY: check-lab5
+check-lab5: $(PROGS) /lib/x86_64-linux-gnu/libgbm.so.1 /usr/bin/certutil
+	./check-lab5.sh
+
+/usr/bin/certutil:
+	sudo apt-get update
+	sudo apt-get install -y libnss3-tools
 
 .PHONY: clean
 clean:
