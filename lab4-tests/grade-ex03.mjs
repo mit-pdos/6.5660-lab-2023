@@ -23,8 +23,7 @@ function findUrl(answerPath) {
     var bestUrl = undefined;
     var bestCount = -1;
     urls.forEach(function(url) {
-        var m = url.match(/%/g);
-        if (!m) return;
+        var m = url.match(/%/g) || [];
         var count = m.length;
         if (count > bestCount) {
             bestCount = count;
