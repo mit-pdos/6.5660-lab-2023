@@ -110,7 +110,7 @@ clean:
 	rm -f *.o *.pyc *.bin $(PROGS)
 
 handin.tar.gz: clean
-	tar cf - `find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v '/node_modules/' | grep -v 'handin\.tar\.gz' | grep -v 'zip$$'` | gzip > $@
+	tar cf - `find . \( -name .git -o -name node_modules -o -name handin.tar.gz -o -name \*zip -o -name ca.key -o -name __pycache__ -o -name .mypy_cache \) -prune -o -type f -print` | gzip > $@
 
 # Workaround for the VM not having zip installed (will be fixed next year)
 zip:
@@ -121,7 +121,7 @@ zip:
 
 handin.zip: clean zip
 	-rm -f $@
-	find . -type f | grep -v '^\.*$$' | grep -v '/\.git/' | grep -v '/node_modules/' | grep -v 'handin\.tar\.gz' | grep -v 'zip$$' | ./zip -r@ $@
+	find . \( -name .git -o -name node_modules -o -name handin.tar.gz -o -name \*zip -o -name ca.key -o -name __pycache__ -o -name .mypy_cache \) -prune -o -type f -print | ./zip -r@ $@
 
 .PHONY: typecheck
 typecheck: $(wildcard *.py zoobar/*.py)
