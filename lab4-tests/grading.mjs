@@ -93,6 +93,7 @@ export var webpage = (() => {
           try {
             await page.evaluate((script) => eval(script), script);
           } catch (e) {
+            console.error(e);
             return false;
           }
           return true;
