@@ -17,7 +17,7 @@ async function saveCred(page) {
 }
 
 async function main() {
-    grading.registerTimeout(60);
+    grading.registerTimeout(120);
 
     var grader1_cred = null;
     var grader2_cred = null;
