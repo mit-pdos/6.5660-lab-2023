@@ -24,4 +24,6 @@ app = flask.Flask(__name__)
 server.flask_init(app)
 
 if __name__ == "__main__":
+    with open('/dev/null', 'r') as null:
+        os.dup2(null.fileno(), 0)
     app.run(debug = True, host = '0.0.0.0')
