@@ -45,6 +45,9 @@ export var webpage = (() => {
   return {
     create: async () => {
       const page = await phantom.browser.newPage();
+      
+      // forwards page errors to grader output, useful for students
+      page.on('pageerror', ({ message }) => console.log('PAGE ERROR: ', message))
 
       // See https://chromedevtools.github.io/devtools-protocol/tot/WebAuthn/
       const cdp_client = await page.target().createCDPSession();
