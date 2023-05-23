@@ -53,16 +53,20 @@ async function main() {
         }
     });
 
-    opts.overrideCredsGetChallenge = null;
-    grader1_cred.rpId = zoobar_fake;
-    await grading.zoobarLogin(zoobar_fake, "grader1", grader1_cred, opts, async function(page, ok) {
-        if (ok) {
-            grading.failed("Logged in as grader1 from wrong origin");
-            phantom.exit();
-        } else {
-            grading.passed("Login from wrong origin blocked");
-        }
-    });
+    try {
+      opts.overrideCredsGetChallenge = null;
+      grader1_cred.rpId = zoobar_fake;
+      await grading.zoobarLogin(zoobar_fake, "grader1", grader1_cred, opts, async function(page, ok) {
+          if (ok) {
+              grading.failed("Logged in as grader1 from wrong origin");
+              phantom.exit();
+          } else {
+              grading.passed("Login from wrong origin blocked");
+          }
+      });
+    } catch (error) {
+      grading.failed("Error wrong origin: " + error.message);
+    }
 
     await grading.zoobarRegister(zoobar_real, "grader2", async function(page, ok) {
         if (ok) {
