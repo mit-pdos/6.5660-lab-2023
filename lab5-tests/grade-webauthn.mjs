@@ -65,7 +65,7 @@ async function main() {
           }
       });
     } catch (error) {
-      grading.failed("Error wrong origin: " + error.message);
+      grading.failed("Logged in as grader1 from wrong origin\nError: " + error.message);
     }
 
     await grading.zoobarRegister(zoobar_real, "grader2", async function(page, ok) {
